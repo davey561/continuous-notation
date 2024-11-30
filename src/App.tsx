@@ -25,16 +25,15 @@ const App: React.FC = () => {
 
     let x = canvas.width / 2;
     let y = canvas.height / 2;
-    let angle = 0;
     const radius = 10;
 
-    text.split('').forEach((char, index) => {
+    text.split('').forEach((char) => {
       const charCode = char.charCodeAt(0);
 
-      // Vary angle more dramatically to create tighter loops
-      angle += (index % 2 === 0 ? 1 : -1) * (Math.PI / 2 + (charCode % 5) * 0.2);
+      // Normalize charCode to a wider range (0 - 360) and add randomness
+      const angle = ((charCode % 360) + Math.random() * 15) * (Math.PI / 180);
 
-      // Calculate next position
+      // Calculate next position in any direction
       const nextX = x + Math.cos(angle) * radius;
       const nextY = y + Math.sin(angle) * radius;
 
@@ -54,7 +53,7 @@ const App: React.FC = () => {
 
   return (
     <div style={{ textAlign: 'center', padding: '20px' }}>
-      <h1>Text to Tighter Looping Curve</h1>
+      <h1>Text to Freeform Curve</h1>
       <input
         type="text"
         value={inputText}
