@@ -27,16 +27,16 @@ const App: React.FC = () => {
     let y = canvas.height / 2;
     const radius = 10;
 
-    text.split('').forEach((char) => {
+    text.split('').forEach((char, index) => {
       const charCode = char.charCodeAt(0);
 
-      // Calculate independent angles for x and y directions
-      const angleX = ((charCode * 3) % 360) * (Math.PI / 180); // Map to 0 - 2π radians
-      const angleY = ((charCode * 7) % 360) * (Math.PI / 180); // Use a different multiplier
+      // Introduce more balanced variation by applying normalization and offsets
+      const angleX = ((charCode + index * 31) % 360) * (Math.PI / 180); // Add index-based offset
+      const angleY = ((charCode + index * 17) % 360) * (Math.PI / 180); // Different multiplier
 
-      // Calculate next position with independent x and y directions
-      const nextX = x + Math.cos(angleX) * radius;
-      const nextY = y + Math.sin(angleY) * radius;
+      // Normalize angles to ensure better coverage across directions
+      const nextX = x + Math.cos(angleX - Math.PI / 2) * radius; // Adjust baseline direction
+      const nextY = y + Math.sin(angleY - Math.PI / 2) * radius; // Adjust baseline direction
 
       ctx.lineTo(nextX, nextY);
       x = nextX;
@@ -62,7 +62,7 @@ const App: React.FC = () => {
         placeholder="Type your sentence"
         style={{ width: '100%', padding: '10px', marginBottom: '20px', fontSize: '16px' }}
       />
-      <canvas ref={canvasRef} width={1000} height={600} style={{ border: '1px solid #000' }} />
+      <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid #000' }} />
     </div>
   );
 };
