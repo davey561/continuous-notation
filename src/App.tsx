@@ -30,12 +30,13 @@ const App: React.FC = () => {
     text.split('').forEach((char) => {
       const charCode = char.charCodeAt(0);
 
-      // Normalize charCode to a wider range (0 - 360) and add randomness
-      const angle = ((charCode % 360) + Math.random() * 15) * (Math.PI / 180);
+      // Calculate independent angles for x and y directions
+      const angleX = ((charCode * 3) % 360) * (Math.PI / 180); // Map to 0 - 2π radians
+      const angleY = ((charCode * 7) % 360) * (Math.PI / 180); // Use a different multiplier
 
-      // Calculate next position in any direction
-      const nextX = x + Math.cos(angle) * radius;
-      const nextY = y + Math.sin(angle) * radius;
+      // Calculate next position with independent x and y directions
+      const nextX = x + Math.cos(angleX) * radius;
+      const nextY = y + Math.sin(angleY) * radius;
 
       ctx.lineTo(nextX, nextY);
       x = nextX;
@@ -61,7 +62,7 @@ const App: React.FC = () => {
         placeholder="Type your sentence"
         style={{ width: '100%', padding: '10px', marginBottom: '20px', fontSize: '16px' }}
       />
-      <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid #000' }} />
+      <canvas ref={canvasRef} width={1000} height={600} style={{ border: '1px solid #000' }} />
     </div>
   );
 };
