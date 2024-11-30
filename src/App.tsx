@@ -15,26 +15,43 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('');
-  const [parabolaData, setParabolaData] = useState<number[]>([]);
+  const [curveData, setCurveData] = useState<number[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
     setInputText(text);
-    generateParabola(text.length);
+    generateCurve(text);
   };
 
-  const generateParabola = (length: number) => {
-    const range = Array.from({ length: length || 1 }, (_, i) => i - Math.floor(length / 2));
-    const data = range.map(x => x ** 2);
-    setParabolaData(data);
+  const generateCurve = (text: string) => {
+    // Split the text into words
+    const words = text.split(' ');
+
+    // Initialize x and y values
+    let x = 0;
+    const data: number[] = [];
+
+    words.forEach((word, wordIndex) => {
+      // Generate a unique "turn" factor for the word based on its characters
+      const turnFactor = Array.from(word).reduce((acc, char) => acc + char.charCodeAt(0), 0) % 10;
+
+      // For each character in the word, add a "turn" in the curve
+      for (let i = 0; i < word.length; i++) {
+        x++;
+        const y = (turnFactor % 2 === 0 ? 1 : -1) * (x ** 2) / (wordIndex + 1);
+        data.push(y);
+      }
+    });
+
+    setCurveData(data);
   };
 
   const data = {
-    labels: parabolaData.map((_, i) => i),
+    labels: curveData.map((_, i) => i),
     datasets: [
       {
-        label: 'Parabolic Curve',
-        data: parabolaData,
+        label: 'Dynamic Curve Based on Words',
+        data: curveData,
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderWidth: 2,
@@ -50,7 +67,7 @@ const App: React.FC = () => {
       },
       title: {
         display: true,
-        text: 'Parabolic Curve Based on Text Length',
+        text: 'Curve with Turns Based on Typed Words',
       },
     },
     scales: {
@@ -71,7 +88,7 @@ const App: React.FC = () => {
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center', padding: '20px' }}>
-      <h1>Text to Parabolic Curve</h1>
+      <h1>Text to Dynamic Curve</h1>
       <input
         type="text"
         value={inputText}
