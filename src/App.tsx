@@ -1,102 +1,60 @@
-import React, { useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+import React, { useRef, useEffect, useState } from 'react';
 
 const App: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [inputText, setInputText] = useState('');
-  const [curveData, setCurveData] = useState<number[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const text = e.target.value;
-    setInputText(text);
-    generateCurve(text);
+    setInputText(e.target.value);
+    drawCurve(e.target.value);
   };
 
-  const generateCurve = (text: string) => {
-    // Split the text into words
-    const words = text.split(' ');
+  const drawCurve = (text: string) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    // Initialize x and y values
-    let x = 0;
-    const data: number[] = [];
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    words.forEach((word, wordIndex) => {
-      // Generate a unique "turn" factor for the word based on its characters
-      const turnFactor = Array.from(word).reduce((acc, char) => acc + char.charCodeAt(0), 0) % 10;
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // For each character in the word, add a "turn" in the curve
-      for (let i = 0; i < word.length; i++) {
-        x++;
-        const y = (turnFactor % 2 === 0 ? 1 : -1) * (x ** 2) / (wordIndex + 1);
-        data.push(y);
-      }
+    // Start drawing
+    ctx.beginPath();
+    ctx.moveTo(50, canvas.height / 2); // Start point
+    let x = 50;
+    let y = canvas.height / 2;
+
+    text.split('').forEach((char, index) => {
+      const charCode = char.charCodeAt(0);
+      const nextX = x + 15; // Move horizontally
+      const nextY = y + Math.sin(index) * (charCode % 10); // Add variation based on character
+
+      ctx.lineTo(nextX, nextY);
+      x = nextX;
+      y = nextY;
     });
 
-    setCurveData(data);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.stroke();
   };
 
-  const data = {
-    labels: curveData.map((_, i) => i),
-    datasets: [
-      {
-        label: 'Dynamic Curve Based on Words',
-        data: curveData,
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Curve with Turns Based on Typed Words',
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'X-axis',
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Y-axis',
-        },
-      },
-    },
-  };
+  useEffect(() => {
+    drawCurve(inputText);
+  }, [inputText]);
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center', padding: '20px' }}>
-      <h1>Text to Dynamic Curve</h1>
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <h1>Sentence to Continuous Curve</h1>
       <input
         type="text"
         value={inputText}
         onChange={handleChange}
-        placeholder="Type here"
+        placeholder="Type your sentence"
         style={{ width: '100%', padding: '10px', marginBottom: '20px', fontSize: '16px' }}
       />
-      <Line data={data} options={options} />
+      <canvas ref={canvasRef} width={800} height={400} style={{ border: '1px solid #000' }} />
     </div>
   );
 };
