@@ -52,15 +52,22 @@ const App: React.FC = () => {
     drawCurve(inputText);
   }, [inputText]);
 
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   return (
-    <div style={{ textAlign: 'center', padding: '20px' }}>
+    <div style={{ textAlign: 'center', padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      {isMobile && (
+        <p style={{ fontSize: '12px', color: 'red', marginBottom: '10px' }}>
+          This prototype does not currently work on mobile devices.
+        </p>
+      )}
       <h1>Text to Freeform Curve</h1>
       <input
         type="text"
         value={inputText}
         onChange={handleChange}
         placeholder="Type your sentence"
-        style={{ width: '100%', padding: '10px', marginBottom: '20px', fontSize: '16px' }}
+        style={{ width: '80%', padding: '10px', marginBottom: '20px', fontSize: '16px' }}
       />
       <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid #000' }} />
     </div>
