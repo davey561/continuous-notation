@@ -3,18 +3,6 @@ import React, { useRef, useEffect, useState } from 'react';
 const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [inputText, setInputText] = useState('');
-  const [isMobile, setIsMobile] = useState(false);
-  const [email, setEmail] = useState('');
-  const [emailSent, setEmailSent] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-  }, []);
-
-  const handleEmailSend = () => {
-    console.log(`Email sent to: ${email}`);
-    setEmailSent(true);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
@@ -74,33 +62,8 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isMobile) {
-      drawCurve(inputText);
-    }
-  }, [inputText, isMobile]);
-
-  if (isMobile) {
-    return (
-      <div style={{ textAlign: 'center', padding: '20px' }}>
-        <p>Access from Desktop Only!</p>
-        <p>To play around with this prototype, please access it from a desktop browser.</p>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          style={{ width: '80%', padding: '10px', marginBottom: '10px', fontSize: '16px' }}
-        />
-        <button
-          onClick={handleEmailSend}
-          style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}
-        >
-          Send Link to My Email
-        </button>
-        {emailSent && <p style={{ color: 'green' }}>Link sent! Check your inbox.</p>}
-      </div>
-    );
-  }
+    drawCurve(inputText);
+  }, [inputText]);
 
   return (
     <div style={{ textAlign: 'center', padding: '20px', margin: '0 auto' }}>
