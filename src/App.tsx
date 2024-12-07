@@ -82,7 +82,7 @@ const App: React.FC = () => {
   if (isMobile) {
     return (
       <div style={{ textAlign: 'center', padding: '20px' }}>
-        <h1>Access from Desktop Only!</h1>
+        <p>Access from Desktop Only!</p>
         <p>To play around with this prototype, please access it from a desktop browser.</p>
         <input
           type="email"
@@ -103,16 +103,31 @@ const App: React.FC = () => {
   }
 
   return (
-    <div style={{ textAlign: 'center', padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1>Text to Freeform Curve</h1>
+    <div style={{ textAlign: 'center', padding: '20px', margin: '0 auto' }}>
       <input
         type="text"
         value={inputText}
         onChange={handleChange}
-        placeholder="Type your sentence"
-        style={{ width: '80%', padding: '10px', marginBottom: '20px', fontSize: '16px' }}
+        placeholder="Type to draw"
+        style={{
+          width: '100%',
+          maxWidth: '100vw',
+          padding: '10px',
+          marginBottom: '20px',
+          fontSize: '16px',
+          boxSizing: 'border-box', // Ensure padding and border are included in width
+        }}
       />
-      <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid #000' }} />
+      <canvas
+        ref={canvasRef}
+        width={window.innerWidth}
+        height={600}
+        style={{
+          width: '100%',
+          maxWidth: '100vw',
+          border: '1px solid #000',
+        }}
+      />
     </div>
   );
 };
