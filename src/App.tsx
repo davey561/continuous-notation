@@ -97,6 +97,7 @@ const App: React.FC = () => {
     ctx.lineWidth = Math.max(0.05, (1.5 + zoomFactor) / devicePixelRatio); // Thin out the stroke for high resolution
     ctx.stroke();
   };
+  
 
   useEffect(() => {
     const canvas = canvasRef.current;
