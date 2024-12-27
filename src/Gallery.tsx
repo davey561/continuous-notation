@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import Strokey from "./Strokey"
 import { StrokeyThought } from "./StrokeyMaker"
+import "./Gallery.css"
 
 const Gallery = ({
   strokeyThoughts,

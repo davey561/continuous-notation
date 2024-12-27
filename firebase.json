@@ -7,14 +7,9 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-      {
-        "source": "/strokey/**",
-        "destination": "/index.html"
-      },
-      {
-        "source": "/**",
-        "destination": "/index.html"
-      }
+      { "source": "/strokey/**", "destination": "/index.html" },
+      { "source": "/**", "destination": "/index.html" }
     ]
+    
   }
 }
