@@ -2,9 +2,11 @@ import React, { useRef, useEffect, useState } from "react"
 import "./Strokey.css"
 interface StrokeyProps {
   text: string // The text to generate the stroke pattern for
+  onDelete: (timestamp: number) => void
+  timestamp: number
 }
 
-const Strokey: React.FC<StrokeyProps> = ({ text }) => {
+const Strokey: React.FC<StrokeyProps> = ({ text, onDelete, timestamp }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [pixelLength, setPixelLength] = useState<number>()
   const [canvasSize, setCanvasSize] = useState<number>()
@@ -108,6 +110,12 @@ const Strokey: React.FC<StrokeyProps> = ({ text }) => {
       alert("Shareable URL copied to clipboard!")
     })
   }
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault() // Prevent the default context menu
+    if (window.confirm("Do you want to delete this thought?")) {
+      onDelete(timestamp)
+    }
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -130,6 +138,7 @@ const Strokey: React.FC<StrokeyProps> = ({ text }) => {
       }}
       key={text}
       onClick={() => handleShare()}
+      onContextMenu={handleContextMenu}
     >
       {/* show text */}
       <div

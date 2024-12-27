@@ -28,7 +28,7 @@ const App = () => {
         setStrokeyThoughts={setStrokeyThoughts}
         preloadedText={preloadedText}
       />
-      <Gallery strokeyThoughts={strokeyThoughts} />
+      <Gallery strokeyThoughts={strokeyThoughts} setStrokeyThoughts={setStrokeyThoughts} />
     </div>
   )
 }

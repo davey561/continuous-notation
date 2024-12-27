@@ -8,7 +8,11 @@
     ],
     "rewrites": [
       {
-        "source": "**",
+        "source": "/strokey/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/**",
         "destination": "/index.html"
       }
     ]
