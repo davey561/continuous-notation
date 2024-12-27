@@ -135,6 +135,7 @@ const Strokey: React.FC<StrokeyProps> = ({ text, onDelete, timestamp }) => {
         justifyContent: "center",
         alignItems: "center",
         flex: 1,
+        boxSizing: "border-box", // Ensure padding/margin are included
       }}
       key={text}
       onClick={() => handleShare()}
@@ -145,9 +146,14 @@ const Strokey: React.FC<StrokeyProps> = ({ text, onDelete, timestamp }) => {
         className="strokey-text-container"
         style={{
           width: `${canvasSize}px`,
+          maxWidth: "100%", // Prevent overflow on smaller screens
+          overflowY: "auto",
+          boxSizing: "border-box", // Ensure consistent width calculations
+          textAlign: "center", // Center text content
+          padding: "10px", // Add padding for better readability
         }}
       >
-        <div className="strokey-text"> {text}</div>
+        <div className="strokey-text">{text}</div>
       </div>
       <canvas
         key={text}

@@ -127,7 +127,9 @@ const StrokeyMaker = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "start", // Ensures proper alignment from the top
+        paddingTop: "10px", // Add spacing from the top
+        boxSizing: "border-box", // Ensures consistent width handling
       }}
     >
       <input
@@ -138,13 +140,22 @@ const StrokeyMaker = ({
         placeholder="Type to draw"
         style={{
           width: "95%",
-          maxWidth: "100vw",
           padding: "10px",
-          marginTop: "1%",
+          marginTop: "10px", // Add some spacing from the top
           fontSize: "16px",
+          boxSizing: "border-box", // Includes padding in width calculation
         }}
       />
-      <canvas ref={canvasRef} style={{ display: "block", margin: "0 auto" }} />
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: "block",
+          width: "100%",
+          maxWidth: "95%", // Match input width
+          height: "auto", // Allow responsive scaling
+          margin: "10px 0", // Add vertical spacing
+        }}
+      />
     </div>
   )
 }
