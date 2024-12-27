@@ -1,13 +1,48 @@
 import React, { useRef, useEffect, useState } from "react"
-import "./Strokey.css"
-interface StrokeyProps {
-  text: string // The text to generate the stroke pattern for
-}
+import Strokey from "./Strokey"
+import Gallery from "./Gallery"
 
-const Strokey: React.FC<StrokeyProps> = ({ text }) => {
+//localstorage array of past strokey thoughts
+export interface StrokeyThought {
+  text: string
+  timestamp: number
+}
+export const StrokeyThoughtsLocalStorageKey = "StrokeyThoughts"
+
+const StrokeyMaker = ({
+  strokeyThoughts,
+  setStrokeyThoughts,
+}: {
+  strokeyThoughts: StrokeyThought[]
+  setStrokeyThoughts: any
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const [pixelLength, setPixelLength] = useState<number>()
-  const [canvasSize, setCanvasSize] = useState<number>()
+  const [inputText, setInputText] = useState("")
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value
+    setInputText(text)
+    drawCurve(text)
+  }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      window.alert("Saved to Gallery Below")
+      //add to strokey thoughts array
+      const newStrokeyThoughts = [...strokeyThoughts, { text: inputText, timestamp: Date.now() }]
+      setStrokeyThoughts(newStrokeyThoughts)
+
+      //also update the localStorage here
+      localStorage.setItem(StrokeyThoughtsLocalStorageKey, JSON.stringify(newStrokeyThoughts))
+
+      //clear input
+      setInputText("")
+    }
+  }
+
+  useEffect(() => {
+    //testing if strokeythoughts gets updated
+    console.log({ strokeyThoughts })
+  }, [strokeyThoughts])
 
   const drawCurve = (text: string) => {
     const canvas = canvasRef.current
@@ -17,27 +52,20 @@ const Strokey: React.FC<StrokeyProps> = ({ text }) => {
     if (!ctx) return
 
     const devicePixelRatio = window.devicePixelRatio || 1
-    const newCanvasSize = Math.min(
-      canvas.parentElement?.clientWidth || 0,
-      canvas.parentElement?.clientHeight || 0
-    ) // Make canvas square within its parent
-    setCanvasSize(newCanvasSize)
+    const canvasSize = Math.min(window.innerWidth, window.innerHeight - 60) // Square size with input box accounted for
 
     // Adjust canvas size for high resolution
-    const newPixelLength = newCanvasSize * devicePixelRatio
-    canvas.width = newPixelLength
-    canvas.height = newPixelLength
-    setPixelLength(newPixelLength)
-
-    canvas.style.width = `${newCanvasSize}px`
-    canvas.style.height = `${newCanvasSize}px`
+    canvas.width = canvasSize * devicePixelRatio
+    canvas.height = canvasSize * devicePixelRatio
+    canvas.style.width = `${canvasSize}px`
+    canvas.style.height = `${canvasSize}px`
 
     // Scale the context to account for the device pixel ratio
     ctx.scale(devicePixelRatio, devicePixelRatio)
 
     const padding = 40 // Add padding around the curve
-    const maxWidth = newCanvasSize - 2 * padding
-    const maxHeight = newCanvasSize - 2 * padding
+    const maxWidth = canvasSize - 2 * padding
+    const maxHeight = canvasSize - 2 * padding
 
     let points: [number, number][] = []
     let x = 0 // Center the curve in logical space
@@ -75,8 +103,8 @@ const Strokey: React.FC<StrokeyProps> = ({ text }) => {
     const scale = Math.min(maxWidth / logicalWidth, maxHeight / logicalHeight)
 
     // Center the curve in the canvas
-    const xOffset = newCanvasSize / 2 - ((maxX + minX) / 2) * scale
-    const yOffset = newCanvasSize / 2 - ((maxY + minY) / 2) * scale
+    const xOffset = canvasSize / 2 - ((maxX + minX) / 2) * scale
+    const yOffset = canvasSize / 2 - ((maxY + minY) / 2) * scale
 
     // Apply scaling and draw the curve
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -104,45 +132,46 @@ const Strokey: React.FC<StrokeyProps> = ({ text }) => {
   useEffect(() => {
     const canvas = canvasRef.current
     if (canvas) {
-      drawCurve(text)
+      drawCurve(inputText)
     }
-  }, [text])
+  }, [inputText])
 
   return (
     <div
-      className="strokey-container"
       style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flex: 1,
+        textAlign: "center",
+        padding: "0",
+        margin: "0",
+        overflow: "hidden",
+        height: "100vh",
       }}
-      key={text}
     >
-      {/* show text */}
-      <div
-        className="strokey-text-container"
+      <input
+        type="text"
+        value={inputText}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Type to draw"
         style={{
-          width: `${canvasSize}px`,
+          width: "98%",
+          maxWidth: "100vw",
+          padding: "10px",
+          marginTop: "10px",
+          fontSize: "16px",
+          boxSizing: "border-box", // Ensure padding and border are included in width
+
+          zIndex: 10,
         }}
-      >
-        <div className="strokey-text"> {text}</div>
-      </div>
+      />
       <canvas
-        key={text}
-        className="strokey-stroke"
         ref={canvasRef}
         style={{
           display: "block",
-          width: "100%",
-          height: "100%",
+          margin: "0 auto",
         }}
-      ></canvas>
+      />
     </div>
   )
 }
 
-export default Strokey
+export default StrokeyMaker

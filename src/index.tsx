@@ -1,13 +1,15 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 import "./index.css"
-import App from "./App"
+import StrokeyMaker from "./StrokeyMaker"
 import reportWebVitals from "./reportWebVitals"
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
 import { getAnalytics } from "firebase/analytics"
 import Strokey from "./Strokey"
+import Gallery from "./Gallery"
+import App from "./App"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -30,8 +32,8 @@ const analytics = getAnalytics(app)
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <React.StrictMode>
-    {/* <Strokey text="Hello its fun to be playing around with a new form of react component woooohoooohwhoooo" /> */}
     <App />
+    {/* <Strokey text="Hello its fun to be playing around with a new form of react component woooohoooohwhoooo" /> */}
   </React.StrictMode>
 )
 
