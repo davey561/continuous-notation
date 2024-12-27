@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { StrokeyThought, StrokeyThoughtsLocalStorageKey } from "./StrokeyMaker"
 import Strokey from "./Strokey"
+import { StrokeyThought } from "./StrokeyMaker"
 
 const Gallery = ({ strokeyThoughts }: { strokeyThoughts: StrokeyThought[] }) => {
   const ordered = strokeyThoughts.sort((a, b) => b.timestamp - a.timestamp)

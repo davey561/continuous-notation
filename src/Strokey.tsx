@@ -100,6 +100,14 @@ const Strokey: React.FC<StrokeyProps> = ({ text }) => {
     ctx.lineWidth = Math.max(0.05, (1.5 + zoomFactor) / devicePixelRatio) // Thin out the stroke for high resolution
     ctx.stroke()
   }
+  const handleShare = () => {
+    const url = `${window.location.origin}${window.location.pathname}?text=${encodeURIComponent(
+      text
+    )}`
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Shareable URL copied to clipboard!")
+    })
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -121,6 +129,7 @@ const Strokey: React.FC<StrokeyProps> = ({ text }) => {
         flex: 1,
       }}
       key={text}
+      onClick={() => handleShare()}
     >
       {/* show text */}
       <div
